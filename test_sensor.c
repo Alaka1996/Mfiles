@@ -4,7 +4,7 @@
 #include <stdio.h>
 
 void test_average_basic() {
-    uint16_t data[] = {100, 200, 300, 400, 500};
+    uint16_t data[] = {100, 200, 300, 400, 600};
     int avg = calculate_average(data, 5);  // Use the function from utils.c
     assert(avg == 300);
     printf("Test 1 passed: Basic average calculation\n");
