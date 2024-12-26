@@ -1,23 +1,17 @@
-c#include <assert.h>
+#include <assert.h>
 #include <stdint.h>
 
-int calculate_average(uint16_t *data, int size) {
+void test_average() {
+    uint16_t data[] = {100, 200, 300, 400, 500};
     int sum = 0;
-    for (int i = 0; i < size; i++) {
+    for (int i = 0; i < 5; i++) {
         sum += data[i];
     }
-    return sum / size;
+    int avg = sum / 5;
+    assert(avg == 300); // Verify average calculation
 }
-
 
 int main() {
-    void test_average() {
-    uint16_t data[] = {100, 200, 300, 400, 500};
-    int avg = calculate_average(data, 5);
-    assert(avg == 300);
-}
-
-
-    // If no assertion fails, test passes
+    test_average();
     return 0;
 }
