@@ -1,36 +1,45 @@
-# Compiler and flags
+# Variables
 CC = gcc
 CFLAGS = -Wall -Iinclude
-
-# Directories
 SRC_DIR = src
 OBJ_DIR = obj
 BIN_DIR = bin
 
-# Files
-SRC = $(wildcard $(SRC_DIR)/*.c) main.c
-OBJ = $(SRC:%.c=$(OBJ_DIR)/%.o)
-TARGET = $(BIN_DIR)/sensor_program
+# Source files
+SRC = $(wildcard $(SRC_DIR)/*.c)
+OBJ = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRC))
+MAIN_OBJ = $(OBJ_DIR)/main.o
+TEST_OBJ = $(OBJ_DIR)/test_sensor.o
 
-# Default rule
-all: $(TARGET)
+# Targets
+all: dirs $(BIN_DIR)/sensor_program $(BIN_DIR)/test_sensor
 
-# Link object files to create the executable
-$(TARGET): $(OBJ)
-	@mkdir -p $(BIN_DIR)
-	$(CC) $(OBJ) -o $@
-	@echo "Build complete."
+# Create directories
+dirs:
+	mkdir -p $(OBJ_DIR) $(BIN_DIR)
 
-# Compile source files to object files
-$(OBJ_DIR)/%.o: %.c
-	@mkdir -p $(dir $@)
+# Build the main program
+$(BIN_DIR)/sensor_program: $(MAIN_OBJ) $(OBJ)
+	$(CC) $(CFLAGS) $^ -o $@
+
+# Build the test binary
+$(BIN_DIR)/test_sensor: $(TEST_OBJ) $(OBJ)
+	$(CC) $(CFLAGS) $^ -o $@
+
+# Compile main source file
+$(OBJ_DIR)/main.o: main.c
 	$(CC) $(CFLAGS) -c $< -o $@
-	@echo "Compiled: $<"
 
-# Clean up build artifacts
+# Compile test file
+$(OBJ_DIR)/test_sensor.o: test_sensor.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+# Compile other source files
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+# Clean build artifacts
 clean:
 	rm -rf $(OBJ_DIR) $(BIN_DIR)
-	@echo "Cleaned up."
 
-# Declare phony targets
-.PHONY: all clean
+.PHONY: all dirs clean
