@@ -2,6 +2,7 @@
 #include <assert.h>
 #include <stdint.h>
 #include <stdio.h>
+#include "utils.h"  
 
 void test_average_basic() {
     uint16_t data[] = {100, 200, 300, 400, 500};
